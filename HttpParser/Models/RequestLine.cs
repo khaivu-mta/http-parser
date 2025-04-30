@@ -10,22 +10,17 @@ namespace HttpParser.Models
         public string Url { get; set; }
         public string HttpVersion { get; set; }
 
-        private readonly string[] validHttpVerbs = { "GET", "POST" };
+        private readonly string[] validHttpVerbs = { "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD", "TRACE", "CONNECT" };
 
         public RequestLine(string[] lines)
         {
             var firstLine = lines[0].Split(' ');
-            ValidateRequestLine(firstLine);
+            if (firstLine.Length != 3)
+                throw new CouldNotParseHttpRequestException("Request Line is not in a valid format", "ValidateRequestLine", string.Join(" ", firstLine));
 
             SetHttpMethod(firstLine[0]);
             SetUrl(firstLine[1]);
             SetHttpVersion(firstLine[2]);
-        }
-
-        private void ValidateRequestLine(string[] firstLine)
-        {
-            if (firstLine.Length != 3)
-                throw new CouldNotParseHttpRequestException("Request Line is not in a valid format", "ValidateRequestLine", string.Join(" ", firstLine));
         }
 
         private void SetHttpMethod(string method)
@@ -40,6 +35,7 @@ namespace HttpParser.Models
 
         private void SetUrl(string url)
         {
+            // theo https://httpwg.org/specs/rfc9110.html, ở đây không phaỉ là dạng url mà là uri. Tuy nhiên sẽ giữ nguyên url để phù hợp với công cụ extract http raw request.
             if (!IsValidUri(url, out Uri _))
                 throw new CouldNotParseHttpRequestException($"URL is not in a valid format", "SetUrl", url);
 

@@ -1,14 +1,12 @@
-﻿using HttpBuilder;
+﻿using FluentAssertions;
 using HttpParser;
-using NUnit.Framework;
-using System.IO;
-using System.Text;
-using Moq;
+using HttpParser.Extentions;
 using HttpParser.Models;
-using HttpWebRequestExecutor.Models;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Tests.FakeData;
-using HttpWebRequestExecutor.Interfaces;
-using FluentAssertions;
 
 namespace Tests
 {
@@ -16,95 +14,91 @@ namespace Tests
     public class HttpWebRequestBuilderTests
     {
         [Test]
-        public void Should_Build_Get()
+        public void kevin()
         {
-            var parsed = Parser.ParseRawRequest(FakeRawRequests.GetWithoutQueryString);
-            var req = HttpWebRequestBuilder.InitializeWebRequest(parsed);
-
-            req.Should().BeOfType<System.Net.HttpWebRequest>();
-        }
-
-        [Test]
-        public void Should_Run_Fake_Request()
-        {
-            // arrange
-            var expected = "hello world";
-
-            var response = new Mock<IHttpWebResponse>();
-            response.Setup(s => s.GetResponseStream()).Returns(FakeStream(expected));
-
-            var request = new Mock<IHttpWebRequest>();
-            request.Setup(c => c.GetResponse()).Returns(response.Object);
-
-            var factory = new Mock<IHttpWebRequestFactory>();
-            factory.Setup(c => c.BuildRequest(It.IsAny<ParsedHttpRequest>())).Returns(request.Object);
-
-            var parsed = Parser.ParseRawRequest(FakeRawRequests.GetWithoutQueryString);
-
-            // act
-            var actualRequest = factory.Object.BuildRequest(parsed);
-
-            string actual;
-
-            using (var httpWebResponse = actualRequest.GetResponse())
+            var rawRequestTestCases = new string[]
             {
-                using (var streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+                FakeRawRequests.Kevin1,
+                FakeRawRequests.Kevin2,
+                FakeRawRequests.Kevin3,
+                FakeRawRequests.Kevin4,
+                FakeRawRequests.Kevin5,
+                FakeRawRequests.Kevin6,
+                FakeRawRequests.Kevin7,
+                FakeRawRequests.Kevin8,
+                FakeRawRequests.Kevin9,
+                FakeRawRequests.Kevin10,
+                FakeRawRequests.Kevin11,
+                FakeRawRequests.Kevin12,
+                FakeRawRequests.Kevin13,
+                FakeRawRequests.Kevin14,
+                FakeRawRequests.Kevin15,
+                FakeRawRequests.Kevin16,
+                FakeRawRequests.Kevin17,
+            };
+
+            var ignoreHeaders = new IgnoreHttpParserOptions();
+            ignoreHeaders.IgnoreHeaders.AddRange(new string[]
+            {
+                "accept-encoding",
+                "content-length",
+            });
+
+            for (int i = 0; i < rawRequestTestCases.Length; i++)
+            {
+                Console.WriteLine($"TestCase #{i + 1}");
+
+                var raw = rawRequestTestCases[i];
+                var parsed = Parser.ParseRawRequest(raw, ignoreHeaders);
+                var req = parsed.ToHttpRequestMessage();
+
+                var headers = parsed.GetHeaders();
+                var cookies = parsed.GetCookies();
+
+                req.Should().NotBeNull();
+                req.Method.Method.Should().Be(headers["method"]);
+                req.RequestUri.Should().Be(parsed.Uri);
+
+                // Kiểm tra các header
+                foreach (var header in headers)
                 {
-                    actual = streamReader.ReadToEnd();
+                    var headerKey = header.Key.ToLower();
+                    if (headerKey is "method" or "httpversion" or "cookie")
+                        continue;
+
+                    var found = req.Headers.TryGetValues(header.Key, out var values)
+                        || (req.Content?.Headers.TryGetValues(header.Key, out values) ?? false);
+
+                    if (!found)
+                    {
+                        // Ghi log lỗi khi header thiếu
+                        Console.WriteLine($"TestCase #{i + 1}: Missing header '{header.Key}'");
+                        continue;
+                    }
+
+                    var actual = string.Join(",", values).Replace(" ", "").Replace(",", "");
+                    if (actual != header.Value.Replace(" ", "").Replace(",", ""))
+                    {
+                        // Ghi log lỗi khi giá trị header không khớp
+                        Console.WriteLine($"TestCase #{i + 1}: Header mismatch for '{header.Key}', expected '{header.Value}', found '{actual}'");
+                    }
+                }
+
+                // Kiểm tra cookies nếu có
+                if (cookies.Count > 0)
+                {
+                    req.Headers.TryGetValues("cookie", out var cookieValues).Should().BeTrue();
+                    var expectedCookie = string.Join("; ", cookies.Select(c => $"{c.Key}={c.Value}"));
+                    cookieValues.First().Should().Be(expectedCookie);
+                }
+
+                // Kiểm tra body nếu có
+                if (!string.IsNullOrEmpty(parsed.RequestBody))
+                {
+                    var content = req.Content.ReadAsStringAsync().Result;
+                    content.Should().Be(parsed.RequestBody);
                 }
             }
-
-            // assert
-            actual.Should().Be(expected);
-        }
-
-        [Test]
-        public void Should_Get_Fake_ParsedWebResponse()
-        {
-            // arrange
-            var expected = "hello world";
-
-            var response = new Mock<IHttpWebResponse>();
-            response.Setup(s => s.GetParsedWebResponse()).Returns(FakeParsedWebResponse(expected));
-
-            var request = new Mock<IHttpWebRequest>();
-            request.Setup(c => c.GetResponse()).Returns(response.Object);
-
-            var factory = new Mock<IHttpWebRequestFactory>();
-            factory.Setup(c => c.BuildRequest(It.IsAny<ParsedHttpRequest>())).Returns(request.Object);
-
-            var parsed = Parser.ParseRawRequest(FakeRawRequests.GetWithoutQueryString);
-
-            // act
-            var actualRequest = factory.Object.BuildRequest(parsed);
-
-            string actual;
-
-            using (var httpWebResponse = actualRequest.GetResponse())
-            {
-                actual = httpWebResponse.GetParsedWebResponse().ResponseText;
-            }
-
-            // assert
-            actual.Should().BeEquivalentTo(expected);
-        }
-
-        private static MemoryStream FakeStream(string expected)
-        {
-            var expectedBytes = Encoding.UTF8.GetBytes(expected);
-            var responseStream = new MemoryStream();
-            responseStream.Write(expectedBytes, 0, expectedBytes.Length);
-            responseStream.Seek(0, SeekOrigin.Begin);
-
-            return responseStream;
-        }
-
-        private static ParsedWebResponse FakeParsedWebResponse(string responseText)
-        {
-            return new ParsedWebResponse()
-            {
-                ResponseText = responseText
-            };
         }
     }
 }

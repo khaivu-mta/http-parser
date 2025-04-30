@@ -5,11 +5,130 @@
         public const string GetWithoutQueryString = @"GET https://httpbin.org/get HTTP/1.1
 Host: httpbin.org
 Connection: keep-alive
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36
+User-Agent: Moz23v4234t234tg23g4234fri/537.36
 Upgrade-Insecure-Requests: 1
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
 Accept-Encoding: gzip, deflate, br
 Accept-Language: en-US,en;q=0.9";
+
+        public const string Kevin1 = @"POST https://vik-game.moonactive.net/api/v1/users/ror_nvbnbvvnv/store HTTP/2.0
+content-type: application/x-www-form-urlencoded
+x-unity-version: 2021.3.21f1
+accept: application/json
+authorization: Bearer eyJhbbbbbbbbbbbbbbbbbbbbbbbbbbm4Ag
+x-client-version: 3.5.2023
+accept-encoding: gzip, deflate, br
+accept-language: vi-VN,vi;q=0.9
+content-length: 146
+user-agent: CoinMaster/2r3123r213rwin/24.2.0
+x-platform: iOS
+cookie: _cfuvid=fafaf_________gagag-23r123r-0.0.1.1-604800000
+cookie: cme=d14_45
+cookie: gw-destination=go
+
+Device%5budid%5d=586_____________3d2&API_KEY=viki&API_SECRET=coin&Device%5bchange%5d=20250414_7&fbToken=&locale=vi&saleId=default";
+
+        public const string Kevin2 = @"POST https://vik-game.moonactive.net/api/v2/friends/users/ror_nvbnbvvnv HTTP/2.0
+content-type: application/x-www-form-urlencoded
+x-unity-version: 2021.3.21f1
+accept: application/json
+authorization: Bearer eyJhbbbbbbbbbbbbbbbbbbbbbbbbbbm4Ag
+x-client-version: 3.5.2023
+accept-encoding: gzip, deflate, br
+accept-language: vi-VN,vi;q=0.9
+content-length: 213
+user-agent: CoinMaster/r23r1 CFNetwork/123r12r Darwin/24.2.0
+x-platform: iOS
+cookie: _cfuvid=fafaf_________gagag-1744649249847-0.0.1.1-604800000
+cookie: cme=d14_45
+cookie: gw-destination=go
+
+Device%5budid%5d=586_____________3d2&API_KEY=viki&API_SECRET=coin&Device%5bchange%5d=20250414_7&fbToken=fafaf_________gabb&locale=vi&non_players=500&p=fb&snfb=true&providers=%5b%22facebook%22%5d";
+
+        public const string Kevin3 = @"POST https://vik-game.moonactive.net/api/v2/users/ror_nvbnbvvnv/fullData HTTP/2
+Host: vik-game.moonactive.net
+Cookie: __cf_bm=mnmmnmnmnxiOw; _cfuvid=Rs.mndsfmdsnf-fs-0.0.1.1-fsf; cme=global
+Content-Type: application/x-www-form-urlencoded
+X-Unity-Version: 2021.3.21f1
+Accept: application/json
+Authorization: Bearer eyJhbbbbbbbbbbbbbbbbbbbbbbbbbbm4Ag
+X-Client-Version: 3.5.1830
+Accept-Encoding: gzip, deflate, br
+Accept-Language: vi-VN,vi;q=0.9
+Content-Length: 265
+User-Agent: CoinMaster/q2fe23 CFNetwork/123r123r/22.2.0
+X-Platform: iOS
+
+Device%5budid%5d=586_____________3d2&API_KEY=viki&API_SECRET=coin&Device%5bchange%5d=20241116_3&fbToken=fafaf_________gabb&locale=vi&Device%5bos%5d=iOS&Client%5bversion%5d=3.5.1830&extended=true&config=all&segmented=true&device_model=iPhone13%2c2";
+
+        public const string Kevin4 = @"POST https://example.com/api/token HTTP/1.1
+content-type: application/x-www-form-urlencoded
+authorization: Bearer abc123
+cookie: sessionid=xyz789
+
+grant_type=client_credentials";
+
+        public const string Kevin5 = @"POST https://example.com/api/token HTTP/1.1
+content-type: application/x-www-form-urlencoded
+
+grant_type=password&username=abc&password=123";
+
+        public const string Kevin6 = @"POST https://example.com/api/token HTTP/1.1
+content-type: application/x-www-form-urlencoded
+cookie: c1=v1
+cookie: c2=v2
+
+grant_type=client_credentials";
+
+        public const string Kevin7 = @"POST https://example.com/user/create HTTP/1.1
+content-type: application/json
+authorization: Bearer token123
+
+{""name"":""Kevin""}";
+
+        public const string Kevin8 = @"POST https://example.com/user/create HTTP/1.1
+content-type: application/json
+authorization: Bearer token123";
+
+        public const string Kevin9 = @"POST https://example.com/user/create HTTP/1.1
+content-type: application/json
+authorization: Bearer token123
+
+{""name"":""Kevin"",""email"":""k@v.com""}";
+
+        public const string Kevin10 = @"POST https://example.com/upload HTTP/1.1
+content-type: multipart/form-data; boundary=----WebKitFormBoundaryabc123
+
+------WebKitFormBoundaryabc123
+Content-Disposition: form-data; name=""file""; filename=""test.txt""
+Content-Type: text/plain
+
+content of the file
+------WebKitFormBoundaryabc123--";
+
+        public const string Kevin11 = @"GET https://example.com/api/user?id=123 HTTP/1.1";
+        public const string Kevin12 = @"PUT https://example.com/api/user/123 HTTP/1.1
+content-type: application/json
+authorization: Bearer puttoken
+
+{""email"":""kevin@example.com""}";
+        public const string Kevin13 = @"PUT https://example.com/api/user/123 HTTP/1.1
+content-type: application/json";
+        public const string Kevin14 = @"PUT https://example.com/api/user/123 HTTP/1.1
+content-type: application/json
+
+{""email"":""kevin@example.com"",""active"":true}";
+        public const string Kevin15 = @"DELETE https://example.com/api/user/123 HTTP/1.1
+authorization: Bearer deletetoken
+x-request-id: 789xyz";
+        public const string Kevin16 = @"PATCH https://example.com/api/user/123 HTTP/1.1
+content-type: application/json
+
+{""status"":""inactive""}";
+        public const string Kevin17 = @"PATCH https://example.com/api/user/123 HTTP/1.1
+content-type: application/json
+
+{""status"":""inactive"",""updated_by"":""admin""}";
 
 
         public const string GetWithQueryString = @"GET https://httpbin.org/get?name=ryan HTTP/1.1
@@ -59,7 +178,7 @@ Content-Type: application/json; charset=UTF-8
 Referer: http://www.providerlookuponline.com/coventry/po7/Search.aspx
 Accept-Encoding: gzip, deflate
 Host: www.providerlookuponline.com
-Cookie: ASP.NET_SessionId=yayd4qyttoe1xgq0xgc24qmy; TS019e6c20=014b5a756ffb575a91f7fe2504052493bb4f1fba160f72df0ba31f8e13fd05c3d62743577fe69ccf443cff87a9d33c5a5f3cc5a96c9e6ba3933a2150b7925ed7a82f86fba4; TS019e6c20_28=014d91d154ab4251246f2b614bad8e3e3241d256a621c0c978e5b5b0c957f5a69eb8d190406800a83fe9c55d4a39c60544f14384e4; TS96fa379b_75=TS96fa379b_rc=0&TS96fa379b_id=2&TS96fa379b_cr=08826a2764ab2800a727f3fb31df5fa1f3d7126b7eb93d1972e2ff558b0f89972be6c6a81e4f0ecc37725679d56547d4:0801e2461a032000f07dc4289936b17d79f52446a01f35ddc8aedb7f8aec47131ce115d972fb6fb8&TS96fa379b_ef=&TS96fa379b_pg=0&TS96fa379b_ct=0&TS96fa379b_rf=0; TSPD_101=08826a2764ab2800a727f3fb31df5fa1f3d7126b7eb93d1972e2ff558b0f89972be6c6a81e4f0ecc37725679d56547d4:; GeoCookie=VisitorGUID=c121d0f4-b987-443d-905a-0d015b138eaa; InitialIntegrationComplete=True; __utma=1.1241581742.1539971847.1539971847.1539971847.1; __utmc=1; __utmz=1.1539971847.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); __utmt=1; __utmb=1.1.10.1539971847; TS019e6c20_77=08826a2764ab2800c69276fe08e7da9f855eefc774f68568df90d2fb919995f7424c2808379f3342dcf98983f849918c08cbf3bf3d823800b90ffcee0cb1a32f5eb378991711baafb033fee7eedb1b0ceaec62f398876aef21bfefc413a3f8f81dc6e49b9a3ae3c2d6f47a28e1ba2d72; GeoCookie=VisitorGUID=c121d0f4-b987-443d-905a-0d015b138eaa; TS01b76a60=014b5a756f4c4111c831124ec77a44bbd45d6d53ed0f72df0ba31f8e13fd05c3d62743577f32f32b5e15dd86c365179a3c6bdbfcf5b69a009d8cebfcc98e7f845df02080ee; ASP.NET_SessionId=yayd4qyttoe1xgq0xgc24qmy; TS019e6c20=014b5a756ffb575a91f7fe2504052493bb4f1fba160f72df0ba31f8e13fd05c3d62743577fe69ccf443cff87a9d33c5a5f3cc5a96c9e6ba3933a2150b7925ed7a82f86fba4; TS01b76a60=014b5a756f4c4111c831124ec77a44bbd45d6d53ed0f72df0ba31f8e13fd05c3d62743577f32f32b5e15dd86c365179a3c6bdbfcf5b69a009d8cebfcc98e7f845df02080ee; TS019e6c20_28=014d91d154ab4251246f2b614bad8e3e3241d256a621c0c978e5b5b0c957f5a69eb8d190406800a83fe9c55d4a39c60544f14384e4
+Cookie: ASP.NET_SessionId=gegwregwergwegrewgwerg
 Content-Length: 23
 
 #{{RequestBody}}";

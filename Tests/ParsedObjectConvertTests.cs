@@ -17,7 +17,7 @@ namespace Tests
         [TestCase(FakeData.FakeRawRequests.PostWithRequestBody)]
         public void Should_Strip_Cookies(string input)
         {
-            var parsed = HttpParser.Parser.ParseRawRequest(input, new HttpParser.Models.IgnoreHttpParserOptions { IgnoreCookies = true }); ;
+            var parsed = HttpParser.Parser.ParseRawRequest(input, new HttpParser.Models.IgnoreHttpParserOptions()); ;
 
             Assert.That(requestCookiesStripped, Is.EqualTo(parsed.ToString()));
         }

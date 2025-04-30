@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace HttpParser.Models
+﻿namespace HttpParser.Models
 {
     internal class RequestHeaders
     {
@@ -9,7 +6,16 @@ namespace HttpParser.Models
 
         public RequestHeaders(string[] lines)
         {
-            InitializeHeaders(lines);
+            Headers = new Dictionary<string, string>();
+            var lastIndex = DetectLastRowIndex(lines);
+            for (int i = 1; i < lastIndex; i++)
+            {
+                var (key, value) = GetHeader(lines[i]);
+
+                if (key == "cookie") continue;
+
+                Headers[key] = value;
+            }
         }
 
         public void AddHeader(string key, string value)
@@ -21,20 +27,6 @@ namespace HttpParser.Models
         {
             if (Headers.ContainsKey(key))
                 Headers.Remove(key);
-        }
-
-        private void InitializeHeaders(string[] lines)
-        {
-            Headers = new Dictionary<string, string>();
-            var lastIndex = DetectLastRowIndex(lines);
-            for (int i = 1; i < lastIndex; i++)
-            {
-                var (key, value) = GetHeader(lines[i]);
-
-                if (key == "Cookie") continue;
-
-                Headers[key] = value;
-            }
         }
 
         private static (string key, string value) GetHeader(string line)

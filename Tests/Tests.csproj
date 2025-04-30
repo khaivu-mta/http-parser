@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HttpWebRequestExecutor\HttpWebRequestExecutor.csproj" />
+    <ProjectReference Include="..\HttpParser\HttpParser.csproj" />
   </ItemGroup>
 
 </Project>

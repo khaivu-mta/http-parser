@@ -5,7 +5,7 @@ namespace HttpParser
 {
     public static class Parser
     {
-        public static ParsedHttpRequest ParseRawRequest(string raw, IgnoreHttpParserOptions options = null)
+        public static ParsedHttpRequest ParseRawRequest(string raw, IgnoreHttpParserOptions? options = null)
         {
             try
             {
@@ -13,20 +13,19 @@ namespace HttpParser
 
                 var requestLine = new RequestLine(lines);
                 var requestHeaders = new RequestHeaders(lines);
-                requestHeaders.AddHeader("Method", requestLine.Method);
-                requestHeaders.AddHeader("HttpVersion", requestLine.HttpVersion);
+                requestHeaders.AddHeader("method", requestLine.Method);
+                requestHeaders.AddHeader("httpversion", requestLine.HttpVersion);
 
                 var requestCookies = new RequestCookies(lines);
                 var requestBody = new RequestBody(requestLine, lines);
 
-                var parsed = new ParsedHttpRequest(options)
-                {
-                    Url = requestLine.Url,
-                    Uri = new Uri(requestLine.Url),
-                    Headers = requestHeaders.Headers,
-                    Cookies = requestCookies.ParsedCookies,
-                    RequestBody = requestBody.Body
-                };
+                var parsed = new ParsedHttpRequest(
+                    url: requestLine.Url,
+                    headers: requestHeaders.Headers,
+                    cookies: requestCookies.ParsedCookies,
+                    body: requestBody.Body,
+                    regexIgnore: options ?? new()
+                    );
 
                 parsed.ApplyIgnoreOptions();
 
@@ -47,6 +46,7 @@ namespace HttpParser
         private static string[] SplitLines(string raw)
         {
             return raw
+                .TrimStart('\r', '\n')
                 .TrimEnd('\r', '\n')
                 .Split(new[] { "\\n", "\n", "\r\n" }, StringSplitOptions.None);
         }
