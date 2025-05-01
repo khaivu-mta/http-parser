@@ -1,5 +1,4 @@
 ﻿using HttpParser.Models;
-using System;
 
 namespace HttpParser
 {

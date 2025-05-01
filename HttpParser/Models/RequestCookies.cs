@@ -47,7 +47,7 @@ namespace HttpParser.Models
                 var cookieParts = cookie.Split(new[] { '=' }, 2); // Tách theo dấu '=' chỉ một lần
                 if (cookieParts.Length == 2)
                 {
-                    var key = cookieParts[0].Trim();
+                    var key = cookieParts[0].Trim().Replace("cookie:", "", StringComparison.OrdinalIgnoreCase); // Loại bỏ "cookie:" nếu có
                     var value = cookieParts[1].Trim();
                     ParsedCookies[key] = value;
                 }
@@ -62,16 +62,15 @@ namespace HttpParser.Models
         {
             if (string.IsNullOrEmpty(cookiesLine)) return;
 
-            // Tách cookie theo từng dòng nếu có nhiều cookie
-            foreach (var line in cookiesLine.Split('\n'))
+            // Loại bỏ "cookie:" trong key
+            var cleanLine = cookiesLine.Replace("cookie:", "", StringComparison.OrdinalIgnoreCase).Trim();
+
+            var cookieParts = cleanLine.Split(new[] { '=' }, 2); // Tách theo dấu '=' chỉ một lần
+            if (cookieParts.Length == 2)
             {
-                var cookieParts = line.Split(new[] { '=' }, 2); // Tách theo dấu '=' chỉ một lần
-                if (cookieParts.Length == 2)
-                {
-                    var key = cookieParts[0].Trim();
-                    var value = cookieParts[1].Trim();
-                    ParsedCookies[key] = value;
-                }
+                var key = cookieParts[0].Trim();
+                var value = cookieParts[1].Trim();
+                ParsedCookies[key] = value;
             }
         }
     }

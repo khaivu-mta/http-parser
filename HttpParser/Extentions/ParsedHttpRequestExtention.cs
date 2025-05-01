@@ -6,6 +6,62 @@ namespace HttpParser.Extentions
 {
     public static class ParsedHttpRequestExtention
     {
+        public static string ToCurl(this ParsedHttpRequest parsed)
+        {
+            var sb = new StringBuilder();
+            sb.Append("curl");
+
+            var method = parsed.GetHeader("method").ToUpperInvariant();
+            if (method != "GET")
+                sb.Append($" --request {method}");
+
+            var headers = parsed.GetHeaders();
+            var contentType = "";
+            var hasCookieHeader = false;
+
+            foreach (var header in headers)
+            {
+                var key = header.Key.ToLowerInvariant();
+                if (key is "method" or "httpversion")
+                    continue;
+
+                if (key == "content-type")
+                    contentType = header.Value;
+
+                if (key == "cookie")
+                {
+                    hasCookieHeader = true;
+                    var rawCookie = header.Value
+                        .Split(';')
+                        .Select(x => x.Trim().TrimStart().Replace("cookie:", "", StringComparison.OrdinalIgnoreCase).Trim()) // Loại bỏ cookie: ở đầu key
+                        .Where(x => !string.IsNullOrEmpty(x));
+                    var combined = string.Join("; ", rawCookie);
+                    sb.Append($" --header \"cookie: {combined}\"");
+                    continue;
+                }
+
+                sb.Append($" --header \"{header.Key}: {header.Value}\"");
+            }
+
+            var cookies = parsed.GetCookies();
+            if (!hasCookieHeader && cookies.Count > 0)
+            {
+                var cookieHeader = string.Join("; ", cookies.Select(c => $"{c.Key}={c.Value}"));
+                sb.Append($" --header \"cookie: {cookieHeader}\"");
+            }
+
+            if (!string.IsNullOrEmpty(parsed.RequestBody) && method != "GET")
+            {
+                if (string.IsNullOrEmpty(contentType))
+                    sb.Append(" --header \"Content-Type: text/plain\"");
+
+                sb.Append($" --data \"{parsed.RequestBody}\"");
+            }
+
+            sb.Append($" \"{parsed.Uri}\"");
+            return sb.ToString();
+        }
+
         public static HttpRequestMessage ToHttpRequestMessage(this ParsedHttpRequest parsed)
         {
             var method = new HttpMethod(parsed.GetHeader("method"));
