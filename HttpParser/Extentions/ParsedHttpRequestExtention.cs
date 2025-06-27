@@ -1,4 +1,5 @@
 ﻿using HttpParser.Models;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -6,6 +7,74 @@ namespace HttpParser.Extentions
 {
     public static class ParsedHttpRequestExtention
     {
+        public static string ToHttpRequestCode(this ParsedHttpRequest parsed)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("var client = new HttpClient();");
+
+            var method = parsed.Method.ToUpperInvariant() switch
+            {
+                "GET" => "HttpMethod.Get",
+                "POST" => "HttpMethod.Post",
+                "PUT" => "HttpMethod.Put",
+                "DELETE" => "HttpMethod.Delete",
+                "HEAD" => "HttpMethod.Head",
+                "OPTIONS" => "HttpMethod.Options",
+                "TRACE" => "HttpMethod.Trace",
+                "PATCH" => "HttpMethod.Patch",
+                _ => $"new HttpMethod(\"{parsed.Method}\")"
+            };
+
+            sb.AppendLine($"var request = new HttpRequestMessage({method}, \"{parsed.Uri}\");");
+
+            foreach (var header in parsed.GetHeaders())
+            {
+                if (header.Key.Equals("method", StringComparison.OrdinalIgnoreCase) ||
+                    header.Key.Equals("httpversion", StringComparison.OrdinalIgnoreCase) ||
+                    header.Key.Equals("cookie", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                sb.AppendLine($"request.Headers.TryAddWithoutValidation(\"{header.Key}\", \"{header.Value}\");");
+            }
+
+            var cookies = parsed.GetCookies();
+            if (cookies.Count > 0)
+            {
+                var cookieHeader = string.Join("; ", cookies.Select(c => $"{c.Key}={c.Value}"));
+                sb.AppendLine($"request.Headers.TryAddWithoutValidation(\"cookie\", \"{cookieHeader}\");");
+            }
+
+            if (!string.IsNullOrWhiteSpace(parsed.RequestBody))
+            {
+                var pairs = parsed.RequestBody.Split('&')
+                    .Select(x => x.Split('='))
+                    .Where(x => x.Length == 2)
+                    .Select(kv =>
+                    {
+                        var key = WebUtility.UrlDecode(kv[0]);  // Decode key to avoid double encoding
+                        var value = WebUtility.UrlDecode(kv[1]).Replace("\"", "\\\"");  // Decode value and escape quotes
+
+                        return $"collection.Add(new(\"{key}\", \"{value}\"));";
+                    });
+
+                sb.AppendLine("var collection = new List<KeyValuePair<string, string>>();");
+                foreach (var line in pairs)
+                {
+                    sb.AppendLine(line);
+                }
+
+                sb.AppendLine("var content = new FormUrlEncodedContent(collection);");
+                sb.AppendLine("request.Content = content;");
+            }
+
+            sb.AppendLine("var response = await client.SendAsync(request);");
+            sb.AppendLine("response.EnsureSuccessStatusCode();");
+            sb.AppendLine("Console.WriteLine(await response.Content.ReadAsStringAsync());");
+
+            return sb.ToString();
+        }
+
+
         public static string ToCurl(this ParsedHttpRequest parsed)
         {
             var sb = new StringBuilder();

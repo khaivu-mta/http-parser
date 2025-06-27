@@ -167,5 +167,40 @@ namespace Tests
                 }
             }
         }
+
+        [Test]
+        public void kevin3()
+        {
+            var rawRequestTestCases = new string[]
+            {
+                FakeRawRequests.Kevin1,
+                FakeRawRequests.Kevin2,
+                FakeRawRequests.Kevin3,
+                FakeRawRequests.Kevin4,
+                FakeRawRequests.Kevin5,
+                FakeRawRequests.Kevin6,
+                FakeRawRequests.Kevin7,
+                FakeRawRequests.Kevin8,
+                FakeRawRequests.Kevin9,
+                FakeRawRequests.Kevin10,
+                FakeRawRequests.Kevin11,
+                FakeRawRequests.Kevin12,
+                FakeRawRequests.Kevin13,
+                FakeRawRequests.Kevin14,
+                FakeRawRequests.Kevin15,
+                FakeRawRequests.Kevin16,
+                FakeRawRequests.Kevin17,
+            };
+
+            for (int i = 0; i < rawRequestTestCases.Length; i++)
+            {
+                var raw = rawRequestTestCases[i];
+                var parsed = Parser.ParseRawRequest(raw);
+                var httpCode = parsed.ToHttpRequestCode();
+
+                Console.WriteLine($"====== Kevin{i + 1} ======");
+                Console.WriteLine(httpCode);
+            }
+        }
     }
 }

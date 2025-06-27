@@ -6,6 +6,7 @@ namespace HttpParser.Models
     public class ParsedHttpRequest
     {
         public string Url { get; set; }
+        public string Method { get; private set; }
         private Dictionary<string, string> _headers;
         private Dictionary<string, string> _cookies;
 
@@ -22,11 +23,12 @@ namespace HttpParser.Models
             IgnoreHttpParserOptions regexIgnore)
         {
             Url = url;
-            _headers = headers.ToDictionary(h => h.Key.ToLower(), h => h.Value); // Ensure all headers are lowercase
-            _cookies = cookies.ToDictionary(c => c.Key.ToLower(), c => c.Value); // Ensure all cookies are lowercase
+            _headers = headers.ToDictionary(h => h.Key.ToLower(), h => h.Value);
+            _cookies = cookies.ToDictionary(c => c.Key.ToLower(), c => c.Value);
             RequestBody = body;
             Uri = new(url);
             this.regexIgnoreHttpParserOptions = regexIgnore;
+            this.Method = _headers["method"];
         }
 
         #region Helper
